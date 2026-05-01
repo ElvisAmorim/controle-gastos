@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Gastos - Local Edition</title>
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#1cc88a">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.svg">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-light">
+
+    <!-- Sidebar & Mobile Nav -->
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="bg-dark text-white shadow" id="sidebar-wrapper">
+            <div class="sidebar-heading border-bottom border-secondary py-4 px-3">
+                <i class="fas fa-wallet me-2 text-primary"></i>
+                <span class="fw-bold">MyFinance</span>
+            </div>
+            <div class="list-group list-group-flush p-3">
+                <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0 py-3 active" data-section="dashboard">
+                    <i class="fas fa-chart-line me-3"></i>Dashboard
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0 py-3" data-section="entries">
+                    <i class="fas fa-exchange-alt me-3"></i>Lançamentos
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0 py-3" data-section="fixed">
+                    <i class="fas fa-calendar-check me-3"></i>Custos Fixos
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0 py-3" data-section="categories">
+                    <i class="fas fa-tags me-3"></i>Categorias
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0 py-3" data-section="reports">
+                    <i class="fas fa-chart-pie me-3"></i>Relatórios
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0 py-3" data-section="settings">
+                    <i class="fas fa-cog me-3"></i>Configurações
+                </a>
+            </div>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper" class="w-100">
+            <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm py-3 px-4">
+                <div class="container-fluid">
+                    <button class="btn btn-outline-secondary d-lg-none" id="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h4 class="mb-0 ms-lg-0 ms-3 fw-semibold" id="section-title">Dashboard</h4>
+                    <div class="ms-auto d-flex align-items-center">
+                        <div class="me-3 d-none d-md-block">
+                            <input type="month" class="form-control form-control-sm border-0 bg-light" id="month-filter">
+                        </div>
+                        <button class="btn btn-primary rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalEntry">
+                            <i class="fas fa-plus me-2"></i>Novo
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container-fluid p-4">
+                <!-- Sections Containers -->
+                <div id="dashboard-section" class="section-content">
+                    <!-- Dashboard Cards -->
+                    <div class="row g-4 mb-5">
+                        <!-- Última Atualização -->
+                        <div class="col-md-3">
+                            <div class="card border-0 shadow-sm card-premium">
+                                <div class="card-body p-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div class="stat-icon bg-light text-muted">
+                                            <i class="fas fa-history"></i>
+                                        </div>
+                                    </div>
+                                    <h6 class="text-muted small fw-bold text-uppercase mb-1">Última Atualização</h6>
+                                    <h3 class="fw-bold mb-0" id="last-update">- <small class="fs-6">dias</small></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Poder de Compra (Saldo) -->
+                        <div class="col-md-3">
+                            <div class="card border-0 shadow-sm card-premium">
+                                <div class="card-body p-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div class="stat-icon bg-primary-light text-primary">
+                                            <i class="fas fa-wallet"></i>
+                                        </div>
+                                    </div>
+                                    <h6 class="text-muted small fw-bold text-uppercase mb-1">Poder de Compra</h6>
+                                    <h3 class="fw-bold mb-0" id="total-balance">R$ 0,00</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fixas Pendentes -->
+                        <div class="col-md-3">
+                            <div class="card border-0 shadow-sm card-premium">
+                                <div class="card-body p-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div class="stat-icon bg-warning-light text-warning">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                    </div>
+                                    <h6 class="text-muted small fw-bold text-uppercase mb-1">Fixas Pendentes</h6>
+                                    <h3 class="fw-bold mb-0 text-warning" id="pending-fixed">R$ 0,00</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fatura Cartão -->
+                        <div class="col-md-3">
+                            <div class="card border-0 shadow-sm card-premium">
+                                <div class="card-body p-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div class="stat-icon bg-info-light text-info">
+                                            <i class="fas fa-credit-card"></i>
+                                        </div>
+                                    </div>
+                                    <h6 class="text-muted small fw-bold text-uppercase mb-1">Fatura Cartão</h6>
+                                    <h3 class="fw-bold mb-0 text-info" id="total-credit-card">R$ 0,00</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts & Recent Activities -->
+                    <div class="row g-4">
+                        <div class="col-lg-8">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-header bg-white py-3 border-0">
+                                    <h6 class="mb-0 fw-bold">Evolução Mensal</h6>
+                                </div>
+                                <div class="card-body p-4">
+                                    <canvas id="mainChart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-header bg-white py-3 border-0 d-flex justify-content-between">
+                                    <h6 class="mb-0 fw-bold">Últimos Lançamentos</h6>
+                                    <a href="#" class="small text-decoration-none" data-section-trigger="entries">Ver todos</a>
+                                </div>
+                                <div class="card-body p-0" style="max-height: 320px; overflow-y: auto;">
+                                    <div class="list-group list-group-flush" id="recent-entries">
+                                        <!-- Entries here -->
+                                        <div class="text-center py-5 opacity-50">Nenhum lançamento encontrado.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Resumo Mensal (Jan-Dez) -->
+                    <div class="card border-0 shadow-sm mt-4">
+                        <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0 fw-bold">Resumo Mensal - Ano <span id="summary-year"></span></h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover mb-0 text-center align-middle" style="font-size: 0.85rem;">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="text-start ps-4">Indicadores</th>
+                                            <th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th>
+                                            <th>Jul</th><th>Ago</th><th>Set</th><th>Out</th><th>Nov</th><th>Dez</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table-annual-summary">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="entries-section" class="section-content d-none">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="ps-4">Data</th>
+                                            <th>Descrição</th>
+                                            <th>Categoria</th>
+                                            <th>Forma</th>
+                                            <th>Valor</th>
+                                            <th class="text-end pe-4">Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table-entries-body">
+                                        <!-- Table content here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="fixed-section" class="section-content d-none">
+                     <div class="row g-4" id="fixed-costs-container">
+                        <!-- Fixed costs cards here -->
+                     </div>
+                </div>
+
+                <div id="categories-section" class="section-content d-none">
+                    <div class="row g-4">
+                        <!-- Categorias -->
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm mb-4">
+                                <div class="card-header bg-white py-3 border-0">
+                                    <h6 class="mb-0 fw-bold">Nova Categoria</h6>
+                                </div>
+                                <div class="card-body">
+                                    <form id="form-category" class="row g-2">
+                                        <div class="col-7">
+                                            <input type="text" name="name" class="form-control" placeholder="Nome" required>
+                                        </div>
+                                        <div class="col-3">
+                                            <select name="type" class="form-select">
+                                                <option value="expense">Despesa</option>
+                                                <option value="revenue">Receita</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-2">
+                                            <button type="submit" class="btn btn-primary w-100"><i class="fas fa-plus"></i></button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body p-0">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th class="ps-4">Nome</th>
+                                                <th>Tipo</th>
+                                                <th class="text-end pe-4">Ação</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table-categories-body"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Subcategorias -->
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm mb-4">
+                                <div class="card-header bg-white py-3 border-0">
+                                    <h6 class="mb-0 fw-bold">Nova Subcategoria</h6>
+                                </div>
+                                <div class="card-body">
+                                    <form id="form-subcategory" class="row g-2">
+                                        <div class="col-5">
+                                            <select name="categoryId" class="form-select select-category-main" required>
+                                                <option value="">Categoria Pai</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-5">
+                                            <input type="text" name="name" class="form-control" placeholder="Subcategoria" required>
+                                        </div>
+                                        <div class="col-2">
+                                            <button type="submit" class="btn btn-success w-100"><i class="fas fa-plus"></i></button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body p-0">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th class="ps-4">Subcategoria</th>
+                                                <th>Pai</th>
+                                                <th class="text-end pe-4">Ação</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table-subcategories-body"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="reports-section" class="section-content d-none">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold mb-0">Análise de Orçamento (Gastos vs Receita)</h5>
+                        <div class="d-flex align-items-center">
+                            <label class="me-2 text-muted small">Ano:</label>
+                            <select id="report-year-filter" class="form-select form-select-sm border-0 bg-white shadow-sm w-auto">
+                                <!-- Populated by JS -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="ps-4">Categoria / Sub</th>
+                                            <th>Média Mensal</th>
+                                            <th>% s/ Receita</th>
+                                            <th class="small text-center">Jan</th>
+                                            <th class="small text-center">Fev</th>
+                                            <th class="small text-center">Mar</th>
+                                            <th class="small text-center">Abr</th>
+                                            <th class="small text-center">Mai</th>
+                                            <th class="small text-center">Jun</th>
+                                            <th class="small text-center">Jul</th>
+                                            <th class="small text-center">Ago</th>
+                                            <th class="small text-center">Set</th>
+                                            <th class="small text-center">Out</th>
+                                            <th class="small text-center">Nov</th>
+                                            <th class="small text-center">Dez</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table-report-body">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="settings-section" class="section-content d-none">
+                    <div class="card border-0 shadow-sm max-w-600">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold mb-4">Backup e Segurança</h5>
+                            <p class="text-muted small mb-4">Exporte seus dados para um arquivo JSON para manter um backup ou para importar em outro dispositivo.</p>
+                            
+                            <div class="d-grid gap-3">
+                                <button class="btn btn-outline-primary py-3" id="btn-export">
+                                    <i class="fas fa-file-export me-2"></i>Exportar Dados (JSON)
+                                </button>
+                                
+                                <div class="border-top pt-4 mt-2">
+                                    <label class="form-label fw-medium">Importar Dados</label>
+                                    <input type="file" class="form-control" id="input-import" accept=".json">
+                                    <div class="form-text">Isso irá substituir todos os dados atuais.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+    </div>
+
+    <!-- Modal Entry -->
+    <div class="modal fade" id="modalEntry" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-primary text-white border-0">
+                    <h5 class="modal-title fw-bold">Novo Lançamento</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="form-entry">
+                    <div class="modal-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label">Descrição</label>
+                            <input type="text" class="form-control" name="description" required placeholder="Ex: Supermercado">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Valor</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">R$</span>
+                                    <input type="number" step="0.01" class="form-control" name="value" required placeholder="0,00">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Mês de Referência</label>
+                                <input type="month" class="form-control" name="month" required id="entry-month-input">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Categoria</label>
+                                <select class="form-select select-category-main" id="select-category-entry" required>
+                                    <!-- Options populated by JS -->
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Subcategoria</label>
+                                <select class="form-select" name="subcategoryId" id="select-subcategory-entry" required disabled>
+                                    <option value="">Selecione...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Forma de Pagamento</label>
+                                <select class="form-select" name="paymentMethod">
+                                    <option value="Crédito">Crédito</option>
+                                    <option value="Débito">Débito</option>
+                                    <option value="Pix">Pix</option>
+                                    <option value="Dinheiro">Dinheiro</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="switch-installment" name="isInstallment">
+                            <label class="form-check-label" for="switch-installment">Lançamento Parcelado?</label>
+                        </div>
+                        <div id="installment-fields" class="d-none">
+                            <div class="mb-3">
+                                <label class="form-label">Quantidade de Parcelas</label>
+                                <input type="number" class="form-control" name="totalInstallments" min="2" value="2">
+                                <div class="form-text">As parcelas serão geradas mensalmente a partir da data informada.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 p-4 pt-0">
+                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 shadow">Salvar Lançamento</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Increment Entry -->
+    <div class="modal fade" id="modalIncrement" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-info text-white border-0">
+                    <h5 class="modal-title fw-bold">Incrementar Valor</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="form-increment">
+                    <input type="hidden" name="entryId" id="increment-entry-id">
+                    <div class="modal-body p-4">
+                        <p class="small text-muted mb-3" id="increment-entry-desc"></p>
+                        <label class="form-label">Valor Adicional</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">R$</span>
+                            <input type="number" step="0.01" class="form-control" name="extraValue" required placeholder="0,00" autofocus>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 p-4 pt-0">
+                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-info text-white rounded-pill px-4 shadow">Adicionar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Fixed Cost -->
+    <div class="modal fade" id="modalFixed" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-dark text-white border-0">
+                    <h5 class="modal-title fw-bold">Novo Custo Fixo</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="form-fixed">
+                    <div class="modal-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label">Descrição (Conta)</label>
+                            <input type="text" class="form-control" name="description" required placeholder="Ex: Internet">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Valor</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">R$</span>
+                                    <input type="number" step="0.01" class="form-control" name="value" required placeholder="0,00">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Mês de Início</label>
+                                <input type="month" class="form-control" name="startMonth" required id="fixed-month-input">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label class="form-label">Categoria</label>
+                                <select class="form-select select-category-main" id="select-category-fixed" required>
+                                    <!-- Options populated by JS -->
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Dia Vencimento</label>
+                                <input type="number" name="dueDay" class="form-control" min="1" max="31" value="1" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Subcategoria</label>
+                                <select class="form-select" name="subcategoryId" id="select-subcategory-fixed" required disabled>
+                                    <option value="">Selecione...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Forma de Pagamento</label>
+                                <select class="form-select" name="paymentMethod">
+                                    <option value="Débito">Débito</option>
+                                    <option value="Crédito">Crédito</option>
+                                    <option value="Pix">Pix</option>
+                                    <option value="Dinheiro">Dinheiro</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 p-4 pt-0">
+                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-dark rounded-pill px-4 shadow">Salvar Custo Fixo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="js/storage.js"></script>
+    <script src="js/logic.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/backup.js"></script>
+    <script src="js/main.js"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => console.log('ServiceWorker registrado com sucesso:', registration.scope))
+                    .catch(err => console.log('Falha ao registrar o ServiceWorker:', err));
+            });
+        }
+    </script>
+</body>
+</html>

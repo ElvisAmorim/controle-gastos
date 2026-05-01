@@ -1,0 +1,17 @@
+{
+  "name": "Controle de Gastos",
+  "short_name": "Gastos",
+  "description": "Aplicativo PWA para gestão financeira pessoal offline-first",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f8f9fa",
+  "theme_color": "#1cc88a",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
