@@ -151,3 +151,37 @@ body {
 
 .entry-row-revenue { color: var(--success-color); }
 .entry-row-expense { color: var(--danger-color); }
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    /* Reduce card padding on mobile */
+    .card-body.p-4 {
+        padding: 1.25rem !important;
+    }
+    
+    /* Shrink the large text in dashboard cards */
+    .card-premium h3 {
+        font-size: 1.4rem;
+    }
+
+    /* Shrink the stat icons */
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+    
+    /* Improve table text sizes on mobile */
+    .table td, .table th {
+        font-size: 0.85rem;
+    }
+    
+    /* Dashboard summary tables */
+    .table-responsive {
+        font-size: 0.8rem !important;
+    }
+
+    .table-responsive th, .table-responsive td {
+        padding: 0.4rem;
+    }
+}
