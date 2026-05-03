@@ -106,8 +106,15 @@ const Logic = {
 
         if (maxTime === 0) return '-'; // Só existem parcelas futuras
 
-        const diffTime = Date.now() - maxTime;
-        const dias = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        const lastUpdate = new Date(maxTime);
+        lastUpdate.setHours(0, 0, 0, 0);
+
+        const diffTime = today.getTime() - lastUpdate.getTime();
+        const dias = Math.round(diffTime / (1000 * 60 * 60 * 24));
+        
         return Math.max(0, dias); // Nunca retorna negativo
     },
 
