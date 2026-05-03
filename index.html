@@ -19,7 +19,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=1.0.2">
 </head>
 
 <body class="bg-light">
@@ -616,18 +616,21 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- App Scripts -->
-    <script src="js/storage.js"></script>
-    <script src="js/logic.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/backup.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/storage.js?v=1.0.2"></script>
+    <script src="js/logic.js?v=1.0.2"></script>
+    <script src="js/ui.js?v=1.0.2"></script>
+    <script src="js/backup.js?v=1.0.2"></script>
+    <script src="js/main.js?v=1.0.2"></script>
 
     <!-- PWA Service Worker Registration -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(registration => console.log('ServiceWorker registrado com sucesso:', registration.scope))
+                navigator.serviceWorker.register('sw.js?v=1.0.2')
+                    .then(registration => {
+                        console.log('ServiceWorker registrado com sucesso:', registration.scope);
+                        registration.update(); 
+                    })
                     .catch(err => console.log('Falha ao registrar o ServiceWorker:', err));
             });
         }
