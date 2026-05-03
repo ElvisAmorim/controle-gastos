@@ -76,7 +76,7 @@ const UI = {
                 
                 // Active class
                 document.querySelectorAll('[data-section]').forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
+                document.querySelectorAll(`[data-section="${section}"]`).forEach(l => l.classList.add('active'));
 
                 // Close sidebar on mobile
                 if (window.innerWidth < 992) {
